@@ -1,28 +1,33 @@
 #!/usr/bin/python3
-"""Creationg route for Blueprint
-"""
+"""index.py to connect to API"""
 from api.v1.views import app_views
+from flask import Flask, Blueprint, jsonify
 from models import storage
-from flask import jsonify
 
 
-@app_views.route('/status')
-def response():
-    """ get status ok
-    """
-    dic = {"status": "OK"}
-    return jsonify(dic)
+hbnbText = {
+    "amenities": "Amenity",
+    "cities": "City",
+    "places": "Place",
+    "reviews": "Review",
+    "states": "State",
+    "users": "User"
+}
 
 
-@app_views.route('/stats')
-def class_counter():
-    """ get a dictionary from count method
-    """
-    dic = {}
-    dic["amenities"] = storage.count("Amenity")
-    dic["cities"] = storage.count("City")
-    dic["places"] = storage.count("Place")
-    dic["reviews"] = storage.count("Review")
-    dic["states"] = storage.count("State")
-    dic["users"] = storage.count("User")
-    return jsonify(dic)
+@app_views.route('/status', strict_slashes=False)
+def hbnbStatus():
+    """hbnbStatus"""
+    return jsonify({"status": "OK"})
+
+
+@app_views.route('/stats', strict_slashes=False)
+def hbnbStats():
+    """hbnbStats"""
+    return_dict = {}
+    for key, value in hbnbText.items():
+        return_dict[key] = storage.count(value)
+    return jsonify(return_dict)
+
+if __name__ == "__main__":
+    pass
